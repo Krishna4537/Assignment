@@ -4,7 +4,7 @@
 
 Hey there! I’m super excited to share my insights for this assignment on deploying Example Voting App on Amazon Web service (AWS).
 
-where I dive into deploying Docker's Example Voting App on AWS EKS(Elastic Kubernetes Service). The idea here is to show off how Kubernetes can really shine in a microservices architecture. I used Terraform to set up the infrastructure, AWS ECR(Elastic Container Service) for storing container images, and Nginx Ingress Controller to handle external access. Plus, I've automated the whole process using AWS CodePipeline for continuous integration and deployment.
+where I dive into deploying Docker's Example Voting App on AWS EKS(Elastic Kubernetes Service). The idea here is to show how EKS can really shine in a microservices architecture. I used Terraform to set up the infrastructure, AWS ECR(Elastic Container Service) for storing container images, and Nginx Ingress Controller to handle external access. Plus, I've automated the whole process using AWS CodePipeline for continuous integration and deployment.
 
 I tweaked some manifest files, wrote Terraform code to spin up the infrastructure on AWS, and Added CI/CD workflows that deploys everything on an AWS EKS cluster
 
@@ -35,7 +35,7 @@ For the development environment, I needed something that’s suitable for comple
    - **What it is:** Provides virtual machines (instances) on AWS.
    - **Use case:** Great if you need complete control over the OS and software stack.
    - **Pros:** High flexibility and control.
-   - **Cons:**More hands-on management like patching, scaling, and load balancing.
+   - **Cons:** More hands-on management like patching, scaling, and load balancing.
 
 2. Amazon ECS (Elastic Container Service) with Fargate
 
