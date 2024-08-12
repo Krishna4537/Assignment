@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "us-east-1"
+    ENV: "prod"
+  git-credential-helper: yes
+
+phases:
+  install:
+    commands:
+      - echo "Updating and installing Docker"
+      - yum update -y
+      - amazon-linux-extras install docker
+      - service docker start
+      - docker --version
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR"
+      - $(aws ecr get-login --no-include-email --region $AWS_REGION)
+      - echo "Checking out code"
+      - git checkout $CODEBUILD_GIT_BRANCH
+  build:
+    commands:
+      - echo "Building, tagging, and pushing the vote docker image"
+      - docker build -t $REPOSITORY_URI:vote-$ENV-latest --build-arg aws_region=$AWS_REGION --build-arg copy_or_mount="copy" -f vote/Dockerfile ./vote
+      - docker push $REPOSITORY_URI:vote-$ENV-latest
+      - echo "Building, tagging, and pushing the result docker image"
+      - docker build -t $REPOSITORY_URI:result-$ENV-latest --build-arg aws_region=$AWS_REGION --build-arg in_aws="yes" --build-arg copy_or_mount="copy" -f result/Dockerfile ./result
+      - docker push $REPOSITORY_URI:result-$ENV-latest
+      - echo "Building, tagging, and pushing the worker docker image"
+      - docker build -t $REPOSITORY_URI:worker-$ENV-latest --build-arg aws_region=$AWS_REGION --build-arg copy_or_mount="copy" -f worker/Dockerfile ./worker
+      - docker push $REPOSITORY_URI:worker-$ENV-latest
+  post_build:
+    commands:
+      - echo "Build and push completed"
+
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: yes
